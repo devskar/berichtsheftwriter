@@ -1,15 +1,19 @@
 import configparser
-from re import M
+from datetime import date
 
 import requests
 from bs4 import BeautifulSoup
 
 import utils
+from webscraper import UntisWebscraper
 
 CONFIG_WEBUNTIS_SECTION_NAME = 'WEBUNTIS'
+DEBUG = True
 
 
 def main():
+
+    web_scraper = UntisWebscraper(DEBUG)
 
     config = read_config()
 
@@ -23,12 +27,16 @@ def main():
     if login_result.status_code == 200:
         print('Login successful')
     else:
-        print('Login failed')
+        print('Login failed', login_result)
         return
 
-    doc = load_html(config['timetableUrl'], login_result.cookies)
+    information = web_scraper.get_class_information(
+        config['timetableUrl'], login_result.cookies)
 
-    print(doc)
+    filename = date.today().strftime('%d_%m_%Y') + '.txt'
+
+    with open('result/' + filename, 'w') as f:
+        f.write(format_school_info(information))
 
 
 def read_config():
@@ -48,26 +56,6 @@ def read_config():
     }
 
 
-def load_html(url, cookies_m):
-    print('Loading HTML from: ' + url)
-    print(cookies_m)
-
-    headers = {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
-    }
-
-    cookies = {
-        'JSESSIONID': cookies_m['JSESSIONID'],
-        'schoolname': cookies_m['schoolname'],
-    }
-    print(cookies)
-
-    result = requests.get(url, cookies=cookies, headers=headers)
-    doc = BeautifulSoup(result.text, 'html.parser')
-
-    return doc
-
-
 def login(username, password, school_name, security_url):
     print('Logging in as: ' + username)
     headers = {
@@ -77,12 +65,21 @@ def login(username, password, school_name, security_url):
     data = {
         'school': school_name,
         'j_username': username,
-        'j_password': password,
-        'token': '',
+        'j_password': password
     }
 
     result = requests.post(security_url, headers=headers, data=data)
     return result
+
+
+def format_school_info(information):
+    output = ''
+    for key, value in information.items():
+        output += key + '\n'
+        for item in set(value):
+            for content in item.split('\n'):
+                output += '\t' + content.strip() + '\n'
+    return output
 
 
 main()
