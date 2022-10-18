@@ -32,11 +32,13 @@ def main():
 
     information = web_scraper.get_class_information(
         config['timetableUrl'], login_result.cookies)
+    output = format_school_info(information)
 
-    filename = date.today().strftime('%d_%m_%Y') + '.txt'
-
-    with open('result/' + filename, 'w') as f:
-        f.write(format_school_info(information))
+    if not output == '':
+        # write result to file
+        filename = date.today().strftime('%d_%m_%Y') + '.txt'
+        with open('result/' + filename, 'w', encoding='utf-8') as f:
+            f.write(output)
 
 
 def read_config():
@@ -73,12 +75,21 @@ def login(username, password, school_name, security_url):
 
 
 def format_school_info(information):
+    # sort the keys alphabetically
+    sorted_keys = sorted(information.keys(), key=lambda x: x.lower())
     output = ''
-    for key, value in information.items():
+    for key in sorted_keys:
         output += key + '\n'
-        for item in set(value):
-            for content in item.split('\n'):
-                output += '\t' + content.strip() + '\n'
+        all_items = list()
+
+        # get all individual lesson topics
+        for item in information[key]:
+            all_items = all_items + item.split('\n')
+        new_list = list(utils.removeDuplicatesFromList(all_items))
+
+        # remove duplicates and write to string
+        for item in new_list:
+            output += '\t' + item.strip() + '\n'
     return output
 
 

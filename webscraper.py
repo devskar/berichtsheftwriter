@@ -45,7 +45,7 @@ class UntisWebscraper:
 
         if self.debug:
             # save outcome to file for test purposes
-            with open('testt.html', 'w') as file:
+            with open('test.html', 'w') as file:
                 file.write(self.driver.page_source)
 
         # there are some random a tags on the page, so we have to filter rist
@@ -62,7 +62,7 @@ class UntisWebscraper:
 
             self.driver.get(link)
             try:
-                WebDriverWait(self.driver, 3).until(
+                WebDriverWait(self.driver, 5).until(
                     EC.visibility_of_element_located((By.TAG_NAME, 'textarea'))
                 )
             except:
@@ -74,7 +74,7 @@ class UntisWebscraper:
 
             # the lesson name is stored pretty randomly
             lesson_name = self.driver.find_element(by=By.CLASS_NAME, value='text-container').find_elements(
-                by=By.CSS_SELECTOR, value='*')[-1].get_attribute('textContent')
+                by=By.CLASS_NAME, value='element')[-1].get_attribute('textContent')
 
             if not lesson_name in results:
                 results[lesson_name] = [teaching_content]
