@@ -85,6 +85,8 @@ class UntisWebscraper:
             # close the dialog
             self._close_tab_and_go_to_first()
 
+        self.driver.quit()
+
         return results
 
     def _close_tab_and_go_to_first(self):

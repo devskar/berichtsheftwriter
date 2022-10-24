@@ -4,10 +4,11 @@ import base64
 # https://mese.webuntis.com/timetable-students-my/{yyyy-mm-dd}/modal/details/{lesson_id}/false/{student_id (type=5)}
 
 
-def b64ToString(b64):
+def b64_to_string(b64):
     return base64.b64decode(b64).decode('utf-8')
 
-def removeDuplicatesFromList(old_list):
+
+def remove_duplicates_from_list(old_list):
     sorted_list = sorted(old_list)
     last = object()
     for item in sorted_list:
