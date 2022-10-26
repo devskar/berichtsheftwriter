@@ -43,11 +43,6 @@ class UntisWebscraper:
         WebDriverWait(self.driver, 15).until(
             EC.visibility_of_element_located((By.CLASS_NAME, 'grupetScrollContainer')))
 
-        if self.debug:
-            # save outcome to file for test purposes
-            with open('test.html', 'w') as file:
-                file.write(self.driver.page_source)
-
         # there are some random a tags on the page, so we have to filter rist
         unfiltered_tags = self.driver.find_elements(by=By.TAG_NAME, value='a')
 
