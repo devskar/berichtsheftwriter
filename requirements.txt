@@ -1,3 +1,4 @@
 configparser==5.3.0
 requests==2.25.1
 selenium==4.4.3
+webdriver-manager==3.8.3
