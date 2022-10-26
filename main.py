@@ -9,7 +9,6 @@ import utils
 from webscraper import UntisWebscraper
 
 CONFIG_WEBUNTIS_SECTION_NAME = 'WEBUNTIS'
-CONFIG_WEBHOOK_SECTION_NAME = 'WEBHOOK'
 DEBUG = False
 
 
