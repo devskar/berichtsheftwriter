@@ -47,15 +47,17 @@ def main():
     web_scraper = UntisWebscraper(config['chromeDriverPath'], DEBUG)
     information = web_scraper.get_class_information(
         config['webuntisTimetableUrl'], login_result.cookies)
+    if not information:
+        logger.info('No classes this week')
+        return 0
     output = format_school_info(information)
 
-    if not output == '':
-        print(output)
-        # write result to file
-        filepath = 'result/' + CURR_DATE + '.txt'
-        with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(output)
-            logger.info('Result written to file: ' + filepath)
+    print(output)
+    # write result to file
+    filepath = 'result/' + CURR_DATE + '.txt'
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(output)
+        logger.info('Result written to file: ' + filepath)
 
 
 def read_config():
