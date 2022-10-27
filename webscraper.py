@@ -4,11 +4,10 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from webdriver_manager.chrome import ChromeDriverManager
 
 
 class UntisWebscraper:
-    def __init__(self, debug=False):
+    def __init__(self, driverPath, debug=False):
         self.debug = debug
 
         options = webdriver.ChromeOptions()
@@ -16,8 +15,7 @@ class UntisWebscraper:
             # options.add_argument('--incognito')
             options.add_argument('--headless')
 
-        self.driver = webdriver.Chrome(
-            ChromeDriverManager().install(), options=options)
+        self.driver = webdriver.Chrome(driverPath, options=options)
 
     def get_class_information(self, url, auth_cookies):
         print('Loading HTML from: ' + url)

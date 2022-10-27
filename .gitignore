@@ -3,3 +3,5 @@
 /stuff.json
 *.txt
 *.html
+.venv
+chromedriver
