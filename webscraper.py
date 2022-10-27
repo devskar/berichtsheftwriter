@@ -1,9 +1,12 @@
+import logging
 import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+
+logger = logging.getLogger(__name__)
 
 
 class UntisWebscraper:
@@ -13,12 +16,21 @@ class UntisWebscraper:
         options = webdriver.ChromeOptions()
         if not debug:
             # options.add_argument('--incognito')
-            options.add_argument('--headless')
+            options.add_argument("--no-sandbox")
+            options.add_argument("--headless")
+            options.add_argument("--disable-gpu")
+            options.add_argument("--disable-crash-reporter")
+            options.add_argument("--disable-extensions")
+            options.add_argument("--disable-in-process-stack-traces")
+            options.add_argument("--disable-logging")
+            options.add_argument("--disable-dev-shm-usage")
+            options.add_argument("--log-level=3")
+            options.add_argument("--output=/dev/null")
 
         self.driver = webdriver.Chrome(driverPath, options=options)
 
     def get_class_information(self, url, auth_cookies):
-        print('Loading HTML from: ' + url)
+        logger.info('getting class informationLoading HTML from: ' + url)
 
         self.driver.get(url)
 
@@ -54,6 +66,7 @@ class UntisWebscraper:
             self.driver.switch_to.new_window('tab')
 
             self.driver.get(link)
+            logger.info('Loading teaching content from: ' + link)
             try:
                 WebDriverWait(self.driver, 5).until(
                     EC.visibility_of_element_located((By.TAG_NAME, 'textarea'))
