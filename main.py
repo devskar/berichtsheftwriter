@@ -38,10 +38,10 @@ def main():
     login_result = login(config['webuntisUsername'], config['webuntisPassword'],
                          config['webuntisSchool'], config['webuntisSecurityUrl'])
 
-    if login_result.status_code == 200:
+    if 'JSESSIONID' in login_result.cookies:
         logger.info('Login successful')
     else:
-        logger.error('Login failed: ' + login_result)
+        logger.error('Login failed: ' + login_result.content.decode('utf-8'))
         return 1
 
     web_scraper = UntisWebscraper(config['chromeDriverPath'], DEBUG)
